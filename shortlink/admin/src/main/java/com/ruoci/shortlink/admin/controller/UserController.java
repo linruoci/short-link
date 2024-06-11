@@ -1,7 +1,9 @@
 package com.ruoci.shortlink.admin.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.ruoci.shortlink.admin.common.convention.result.Result;
 import com.ruoci.shortlink.admin.common.convention.result.Results;
+import com.ruoci.shortlink.admin.dto.resp.UserActualRespDTO;
 import com.ruoci.shortlink.admin.dto.resp.UserRespDTO;
 import com.ruoci.shortlink.admin.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,16 +23,20 @@ public class UserController {
     private final UserService userService;
 
     /**
-     * 根据用户名查询用户信息
+     * 根据用户名查询脱敏用户信息
      */
     @GetMapping("/api/shortlink/v1/user/{username}")
     public Result<UserRespDTO> getUserByUsername(@PathVariable("username") String username){
         UserRespDTO userRespDTO = userService.getUserByUsername(username);
-
-//        if (userRespDTO == null){
-//            return new Result<UserRespDTO>().setCode(UserErrorCodeEnum.USER_NULL.code()).setMessage(UserErrorCodeEnum.USER_NULL.message());
-//        }
         return Results.success(userRespDTO);
-
     }
+
+    /**
+     * 根据用户名查询全部用户信息
+     */
+    @GetMapping("/api/shortlink/v1/actual/user/{username}")
+    public Result<UserActualRespDTO> getActualUserByUsername(@PathVariable("username") String username){
+        return Results.success(BeanUtil.toBean(userService.getUserByUsername(username), UserActualRespDTO.class));
+    }
+
 }
