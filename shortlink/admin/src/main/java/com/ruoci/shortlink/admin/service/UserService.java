@@ -2,6 +2,7 @@ package com.ruoci.shortlink.admin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoci.shortlink.admin.dao.entity.UserDO;
+import com.ruoci.shortlink.admin.dto.req.UserRegisterReqDTO;
 import com.ruoci.shortlink.admin.dto.resp.UserRespDTO;
 
 /**
@@ -22,6 +23,12 @@ public interface UserService extends IService<UserDO> {
      */
     Boolean hasUsername(String username);
 
+    /**
+     * 用户注册功能
+     * @param requestParam 接收参数
+     * @return 无返回值
+     */
+    void register(UserRegisterReqDTO requestParam);
 
 
 }
