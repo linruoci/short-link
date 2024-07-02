@@ -2,8 +2,10 @@ package com.ruoci.shortlink.admin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoci.shortlink.admin.dao.entity.UserDO;
+import com.ruoci.shortlink.admin.dto.req.UserLoginReqDTO;
 import com.ruoci.shortlink.admin.dto.req.UserRegisterReqDTO;
 import com.ruoci.shortlink.admin.dto.req.UserUpdateReqDTO;
+import com.ruoci.shortlink.admin.dto.resp.UserLoginRespDTO;
 import com.ruoci.shortlink.admin.dto.resp.UserRespDTO;
 
 /**
@@ -39,5 +41,17 @@ public interface UserService extends IService<UserDO> {
     void update(UserUpdateReqDTO requestParam);
 
 
+    /**
+     * 用户登录
+     * @param requestParam 用户登录请求参数
+     * @return 用户标识 token
+     */
+    UserLoginRespDTO login(UserLoginReqDTO requestParam);
+
+    /**
+     *
+     * @return 用户是否登录
+     */
+    Boolean checkLogin(String username, String token);
 
 }
