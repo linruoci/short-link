@@ -11,4 +11,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implements GroupService {
+    @Override
+    public void saveGroup(String groupName) {
+
+    }
 }

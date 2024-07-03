@@ -26,6 +26,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @Author: ruoci
  * 用户接口实现层
@@ -117,7 +119,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
         stringRedisTemplate.opsForHash().put(RedisCacheConstant.LOGIN_USER_KEY + requestParam.getUsername(),
                 token, JSONUtil.toJsonStr(userDO));
-
+        stringRedisTemplate.expire(RedisCacheConstant.LOGIN_USER_KEY + requestParam.getUsername(), 30L, TimeUnit.MINUTES);
         return UserLoginRespDTO.builder()
                 .token(token)
                 .build();
@@ -127,6 +129,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     @Override
     public Boolean checkLogin(String username, String token) {
         return stringRedisTemplate.opsForHash().get(RedisCacheConstant.LOGIN_USER_KEY + username, token) != null;
+    }
+
+    @Override
+    public void logout(String username, String token) {
+        if (checkLogin(username, token)){
+            stringRedisTemplate.delete(RedisCacheConstant.LOGIN_USER_KEY + username);
+            return;
+        }
+        throw new ClientException("用户Token不存在或用户未登录");
     }
 
 
