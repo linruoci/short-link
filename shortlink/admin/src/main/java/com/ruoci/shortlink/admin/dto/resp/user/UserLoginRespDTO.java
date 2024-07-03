@@ -1,4 +1,4 @@
-package com.ruoci.shortlink.admin.dto.resp;
+package com.ruoci.shortlink.admin.dto.resp.user;
 
 import lombok.Builder;
 import lombok.Data;

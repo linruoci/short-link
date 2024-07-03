@@ -2,11 +2,11 @@ package com.ruoci.shortlink.admin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoci.shortlink.admin.dao.entity.UserDO;
-import com.ruoci.shortlink.admin.dto.req.UserLoginReqDTO;
-import com.ruoci.shortlink.admin.dto.req.UserRegisterReqDTO;
-import com.ruoci.shortlink.admin.dto.req.UserUpdateReqDTO;
-import com.ruoci.shortlink.admin.dto.resp.UserLoginRespDTO;
-import com.ruoci.shortlink.admin.dto.resp.UserRespDTO;
+import com.ruoci.shortlink.admin.dto.req.user.UserLoginReqDTO;
+import com.ruoci.shortlink.admin.dto.req.user.UserRegisterReqDTO;
+import com.ruoci.shortlink.admin.dto.req.user.UserUpdateReqDTO;
+import com.ruoci.shortlink.admin.dto.resp.user.UserLoginRespDTO;
+import com.ruoci.shortlink.admin.dto.resp.user.UserRespDTO;
 
 /**
  * @Author: ruoci

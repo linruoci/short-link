@@ -1,25 +1,24 @@
-package com.ruoci.shortlink.admin.dto.req;
+package com.ruoci.shortlink.admin.dto.resp.user;
 
 import lombok.Data;
 
 /**
  * @Author: ruoci
- * 用户注册请求实体类
+ * 用户返回参数响应
  **/
 @Data
-public class UserRegisterReqDTO {
+public class UserActualRespDTO {
 
+    /**
+     * id
+     */
+    private Long id;
 
     /**
      * 用户名
      */
     private String username;
-
-    /**
-     * 密码
-     */
-    private String password;
-
+    
     /**
      * 真实姓名
      */
@@ -34,6 +33,7 @@ public class UserRegisterReqDTO {
      * 邮箱
      */
     private String email;
+
 
 
 }

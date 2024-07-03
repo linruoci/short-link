@@ -1,4 +1,4 @@
-package com.ruoci.shortlink.admin.dto.req;
+package com.ruoci.shortlink.admin.dto.req.group;
 
 import lombok.Data;
 

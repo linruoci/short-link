@@ -1,4 +1,4 @@
-package com.ruoci.shortlink.admin.dto.resp;
+package com.ruoci.shortlink.admin.dto.resp.user;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.ruoci.shortlink.admin.common.serialize.PhoneDesensitizationSerializer;
