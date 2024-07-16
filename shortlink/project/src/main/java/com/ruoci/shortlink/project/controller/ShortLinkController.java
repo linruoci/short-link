@@ -6,13 +6,13 @@ import com.ruoci.shortlink.project.common.convention.result.Results;
 import com.ruoci.shortlink.project.dto.req.ShortLinkCreateReqDTO;
 import com.ruoci.shortlink.project.dto.req.ShortLinkPageReqDTO;
 import com.ruoci.shortlink.project.dto.resp.ShortLinkCreateRespDTO;
+import com.ruoci.shortlink.project.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.ruoci.shortlink.project.dto.resp.ShortLinkPageRespDTO;
 import com.ruoci.shortlink.project.service.ShortLinkService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 短链接控制层
@@ -31,9 +31,21 @@ public class ShortLinkController {
         return Results.success(shortLinkService.createShortLink(requestParam));
     }
 
+    /**
+     * 短链接分页
+     */
     @GetMapping("/api/short-link/v1/page")
     public Result<IPage<ShortLinkPageRespDTO>> pageShortLink(ShortLinkPageReqDTO requestParam){
         return Results.success(shortLinkService.pageShortLink(requestParam));
     }
+
+    /**
+     * 短链接分组内数量
+     */
+    @GetMapping("/api/short-link/v1/count")
+    public Result<List<ShortLinkGroupCountQueryRespDTO>> listGroupShortLinkCount(@RequestParam List<String> requestParam){
+        return Results.success(shortLinkService.listGroupShortLinkCount(requestParam));
+    }
+
 
 }
