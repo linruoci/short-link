@@ -10,11 +10,16 @@ import com.ruoci.shortlink.admin.dao.entity.GroupDO;
 import com.ruoci.shortlink.admin.dao.mapper.GroupMapper;
 import com.ruoci.shortlink.admin.dto.req.group.ShortLinkGroupUpdateReqDTO;
 import com.ruoci.shortlink.admin.dto.resp.group.ShortLinkGroupRespDTO;
+import com.ruoci.shortlink.admin.remote.ShortLinkRemoteService;
+import com.ruoci.shortlink.admin.remote.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.ruoci.shortlink.admin.service.GroupService;
 import com.ruoci.shortlink.admin.toolkit.RandomStringGenerator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 短链接分组接口实现层
@@ -22,20 +27,26 @@ import java.util.List;
 @Service
 public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implements GroupService {
 
+    private ShortLinkRemoteService shortLinkRemoteService = new ShortLinkRemoteService() {};
+
     @Override
-    public void saveGroup(String name) {
+    public void saveGroup(String username, String groupName) {
         String gid;
         do {
             gid = RandomStringGenerator.generateRandomString();
-        } while (checkHasGid(gid));
-
+        } while (checkHasGid(username, gid));
         GroupDO groupDO = GroupDO.builder()
                 .gid(gid)
                 .sortOrder(0)
-                .username(UserContext.getUsername())
-                .name(name)
+                .username(username)
+                .name(groupName)
                 .build();
         baseMapper.insert(groupDO);
+    }
+
+    @Override
+    public void saveGroup(String name) {
+        saveGroup(UserContext.getUsername(), name);
     }
 
     @Override
@@ -45,7 +56,12 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
                 .eq(GroupDO::getDelFlag, 0)
                 .orderByDesc(GroupDO::getSortOrder, GroupDO::getUpdateTime);
         List<GroupDO> groupDOList = baseMapper.selectList(lambdaQueryWrapper);
-        return BeanUtil.copyToList(groupDOList, ShortLinkGroupRespDTO.class);
+        List<ShortLinkGroupRespDTO> results = BeanUtil.copyToList(groupDOList, ShortLinkGroupRespDTO.class);
+
+        List<ShortLinkGroupCountQueryRespDTO> groupCountQueryRespDTOList = shortLinkRemoteService.listGroupShortLinkCount(groupDOList.stream().map(GroupDO::getGid).collect(Collectors.toList())).getData();
+        Map<String, Integer> counts = groupCountQueryRespDTOList.stream().collect(Collectors.toMap(ShortLinkGroupCountQueryRespDTO::getGid, ShortLinkGroupCountQueryRespDTO::getShortLinkCount));
+        return results.stream().peek(result -> result.setShortLinkCount(counts.getOrDefault(result.getGid(), 0))).collect(Collectors.toList());
+
     }
 
     @Override
@@ -75,10 +91,10 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
     /**
      * 当gid存在时, 返回true,不存在返回false
      */
-    public boolean checkHasGid(String gid){
+    public boolean checkHasGid(String username, String gid){
         LambdaQueryWrapper<GroupDO> queryWrapper = Wrappers.lambdaQuery(GroupDO.class)
                 .eq(GroupDO::getId, gid)
-                .eq(GroupDO::getUsername, UserContext.getUsername());
+                .eq(GroupDO::getUsername, Optional.ofNullable(username).orElse(UserContext.getUsername()));
         GroupDO hasGroupDO = baseMapper.selectOne(queryWrapper);
         return hasGroupDO != null;
     }

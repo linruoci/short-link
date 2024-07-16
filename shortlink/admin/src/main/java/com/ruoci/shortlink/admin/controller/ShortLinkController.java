@@ -3,15 +3,15 @@ package com.ruoci.shortlink.admin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ruoci.shortlink.admin.common.convention.result.Result;
-import com.ruoci.shortlink.admin.remote.dto.ShortLinkRemoteService;
+import com.ruoci.shortlink.admin.remote.ShortLinkRemoteService;
 import com.ruoci.shortlink.admin.remote.dto.req.ShortLinkCreateReqDTO;
 import com.ruoci.shortlink.admin.remote.dto.req.ShortLinkPageReqDTO;
 import com.ruoci.shortlink.admin.remote.dto.resp.ShortLinkCreateRespDTO;
+import com.ruoci.shortlink.admin.remote.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.ruoci.shortlink.admin.remote.dto.resp.ShortLinkPageRespDTO;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 短链接中台远程调用服务
@@ -40,5 +40,11 @@ public class ShortLinkController {
     public Result<IPage<ShortLinkPageRespDTO>> pageShortLink(ShortLinkPageReqDTO requestParam){
         return shortLinkRemoteService.pageShortLink(requestParam);
     }
+
+    @GetMapping("/api/short-link/v1/count")
+    public Result<List<ShortLinkGroupCountQueryRespDTO>> listGroupShortLinkCount(@RequestParam List<String> requestParam){
+        return shortLinkRemoteService.listGroupShortLinkCount(requestParam);
+    }
+
 
 }

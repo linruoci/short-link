@@ -12,6 +12,15 @@ import java.util.List;
  **/
 public interface GroupService extends IService<GroupDO> {
 
+
+    /**
+     * 新建分组
+     *
+     * @param groupName 分组名称
+     * @param username 用户名称
+     */
+    void saveGroup(String username, String groupName);
+
     /**
      * 新建分组
      * @param groupName 分组名称
