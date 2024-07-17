@@ -17,6 +17,7 @@ import com.ruoci.shortlink.admin.dto.req.user.UserRegisterReqDTO;
 import com.ruoci.shortlink.admin.dto.req.user.UserUpdateReqDTO;
 import com.ruoci.shortlink.admin.dto.resp.user.UserLoginRespDTO;
 import com.ruoci.shortlink.admin.dto.resp.user.UserRespDTO;
+import com.ruoci.shortlink.admin.service.GroupService;
 import com.ruoci.shortlink.admin.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RBloomFilter;
@@ -43,6 +44,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     private final RedissonClient redissonClient;
 
     private final StringRedisTemplate stringRedisTemplate;
+
+    private final GroupService groupService;
 
 
     @Override
@@ -83,6 +86,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
                     throw new ClientException(UserErrorCodeEnum.USER_EXIST);
                 }
                 userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
+                groupService.saveGroup(requestParam.getUsername(), "默认分组");
             }
         } finally {
             lock.unlock();
