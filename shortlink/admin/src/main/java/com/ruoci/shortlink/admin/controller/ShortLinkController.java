@@ -3,9 +3,11 @@ package com.ruoci.shortlink.admin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ruoci.shortlink.admin.common.convention.result.Result;
+import com.ruoci.shortlink.admin.common.convention.result.Results;
 import com.ruoci.shortlink.admin.remote.ShortLinkRemoteService;
 import com.ruoci.shortlink.admin.remote.dto.req.ShortLinkCreateReqDTO;
 import com.ruoci.shortlink.admin.remote.dto.req.ShortLinkPageReqDTO;
+import com.ruoci.shortlink.admin.remote.dto.req.ShortLinkUpdateReqDTO;
 import com.ruoci.shortlink.admin.remote.dto.resp.ShortLinkCreateRespDTO;
 import com.ruoci.shortlink.admin.remote.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.ruoci.shortlink.admin.remote.dto.resp.ShortLinkPageRespDTO;
@@ -41,10 +43,20 @@ public class ShortLinkController {
         return shortLinkRemoteService.pageShortLink(requestParam);
     }
 
-    @GetMapping("/api/short-link/v1/count")
+    @GetMapping("/api/short-link/admin/v1/count")
     public Result<List<ShortLinkGroupCountQueryRespDTO>> listGroupShortLinkCount(@RequestParam List<String> requestParam){
         return shortLinkRemoteService.listGroupShortLinkCount(requestParam);
     }
+
+    /**
+     * 修改短链接信息
+     */
+    @PostMapping("/api/short-link/admin/v1/update")
+    public Result<Void> updateShortLink(@RequestBody ShortLinkUpdateReqDTO requestParam){
+        shortLinkRemoteService.updateShortLink(requestParam);
+        return Results.success();
+    }
+
 
 
 }
