@@ -9,6 +9,8 @@ import com.ruoci.shortlink.project.dto.req.ShortLinkUpdateReqDTO;
 import com.ruoci.shortlink.project.dto.resp.ShortLinkCreateRespDTO;
 import com.ruoci.shortlink.project.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.ruoci.shortlink.project.dto.resp.ShortLinkPageRespDTO;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
 
@@ -26,6 +28,7 @@ public interface ShortLinkService extends IService<ShortLinkDO> {
 
     /**
      * 短链接分页接口
+     *
      * @param requestParam 短链接分页请求参数
      * @return 短链接分页结果
      */
@@ -33,6 +36,7 @@ public interface ShortLinkService extends IService<ShortLinkDO> {
 
     /**
      * 短链接分组内数量
+     *
      * @param requestParam 短链接分组内数量请求参数
      * @return 短链接分组内结果
      */
@@ -40,7 +44,17 @@ public interface ShortLinkService extends IService<ShortLinkDO> {
 
     /**
      * 修改短链接信息
+     *
      * @param requestParam 更新短链接接收参数
      */
     void updateShortLink(ShortLinkUpdateReqDTO requestParam);
+
+    /**
+     * 短链接跳转
+     *
+     * @param shortUri 短链接
+     * @param request  HTTP请求
+     * @param response HTTP相应
+     */
+    void restoreUrl(String shortUri, HttpServletRequest request, HttpServletResponse response);
 }
