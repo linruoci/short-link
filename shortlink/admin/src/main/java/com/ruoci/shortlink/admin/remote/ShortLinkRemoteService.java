@@ -22,11 +22,22 @@ import java.util.Map;
  **/
 public interface ShortLinkRemoteService {
 
+    /**
+     * 新增短链接
+     *
+     * @param requestParam 新增短链接实体
+     * @return 短链接信息
+     */
     default Result<ShortLinkCreateRespDTO> createShortLink(@RequestBody ShortLinkCreateReqDTO requestParam){
         String resultCreateStr = HttpUtil.post("http://127.0.0.1:8001/api/short-link/v1/create", JSON.toJSONString(requestParam));
         return JSON.parseObject(resultCreateStr, new TypeReference<>(){});
     }
 
+    /**
+     * 修改短链接信息
+     *
+     * @param requestParam 更新短链接接收参数
+     */
     default Result<Void> updateShortLink(ShortLinkUpdateReqDTO requestParam){
         String resultCreateStr = HttpUtil.post("http://127.0.0.1:8001/api/short-link/v1/update", JSON.toJSONString(requestParam));
         return JSON.parseObject(resultCreateStr, new TypeReference<>(){});
@@ -46,6 +57,12 @@ public interface ShortLinkRemoteService {
         return JSON.parseObject(resultPageStr, new TypeReference<>(){});
     }
 
+    /**
+     * 短链接分组内数量
+     *
+     * @param requestParam 短链接分组内数量请求参数
+     * @return 短链接分组内结果
+     */
     default Result<List<ShortLinkGroupCountQueryRespDTO>> listGroupShortLinkCount(List<String> requestParam){
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("requestParam", requestParam);
@@ -53,7 +70,16 @@ public interface ShortLinkRemoteService {
         return JSON.parseObject(resultPageStr, new TypeReference<>(){});
     }
 
-
+    /**
+     * 根据链接获取网站标题
+     *
+     * @param url 目标网站地址
+     * @return 目标网站标题
+     */
+    default Result<String> getTitleByUrl(String url){
+        String resultStr = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/title?url=" + url);
+        return JSON.parseObject(resultStr, new TypeReference<>(){});
+    }
 
 
 
