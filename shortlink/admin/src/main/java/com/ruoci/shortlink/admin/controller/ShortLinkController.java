@@ -25,7 +25,7 @@ public class ShortLinkController {
     /**
      * TODO: 后期修改为SpringCloud
      */
-    private ShortLinkRemoteService shortLinkRemoteService = new ShortLinkRemoteService() {};
+    ShortLinkRemoteService shortLinkRemoteService = new ShortLinkRemoteService() {};
 
     /**
      * 创建短链接

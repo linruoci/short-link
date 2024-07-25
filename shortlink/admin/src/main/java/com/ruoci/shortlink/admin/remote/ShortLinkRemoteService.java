@@ -5,8 +5,10 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ruoci.shortlink.admin.common.convention.result.Result;
+import com.ruoci.shortlink.admin.dto.req.recycle.RecycleBinSaveReqDTO;
 import com.ruoci.shortlink.admin.remote.dto.req.ShortLinkCreateReqDTO;
 import com.ruoci.shortlink.admin.remote.dto.req.ShortLinkPageReqDTO;
+import com.ruoci.shortlink.admin.remote.dto.req.ShortLinkRecycleBinPageReqDTO;
 import com.ruoci.shortlink.admin.remote.dto.req.ShortLinkUpdateReqDTO;
 import com.ruoci.shortlink.admin.remote.dto.resp.ShortLinkCreateRespDTO;
 import com.ruoci.shortlink.admin.remote.dto.resp.ShortLinkGroupCountQueryRespDTO;
@@ -79,6 +81,24 @@ public interface ShortLinkRemoteService {
     default Result<String> getTitleByUrl(String url){
         String resultStr = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/title?url=" + url);
         return JSON.parseObject(resultStr, new TypeReference<>(){});
+    }
+
+    default void saveRecycleBin(RecycleBinSaveReqDTO requestParam){
+        HttpUtil.post("http://127.0.0.1:8001/api/short-link/v1/recycle-bin/save", JSON.toJSONString(requestParam));
+    }
+
+    /**
+     * 分页查询短链接
+     * @param requestParam 分页短链接请求参数
+     * @return 查询短链接响应
+     */
+    default Result<IPage<ShortLinkPageRespDTO>> pageRecycleBinShortLink(ShortLinkRecycleBinPageReqDTO requestParam){
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("gidList", requestParam.getGidList());
+        requestMap.put("current", requestParam.getCurrent());
+        requestMap.put("size", requestParam.getSize());
+        String resultPageStr = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/recycle-bin/page", requestMap);
+        return JSON.parseObject(resultPageStr, new TypeReference<>(){});
     }
 
 
