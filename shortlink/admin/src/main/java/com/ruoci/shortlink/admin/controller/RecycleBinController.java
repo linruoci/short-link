@@ -5,6 +5,7 @@ import com.ruoci.shortlink.admin.common.convention.result.Result;
 import com.ruoci.shortlink.admin.common.convention.result.Results;
 import com.ruoci.shortlink.admin.dto.req.recycle.RecycleBinSaveReqDTO;
 import com.ruoci.shortlink.admin.remote.ShortLinkRemoteService;
+import com.ruoci.shortlink.admin.remote.dto.req.RecycleBinRecoverReqDTO;
 import com.ruoci.shortlink.admin.remote.dto.req.ShortLinkRecycleBinPageReqDTO;
 import com.ruoci.shortlink.admin.remote.dto.resp.ShortLinkPageRespDTO;
 import com.ruoci.shortlink.admin.service.RecycleBinService;
@@ -41,5 +42,15 @@ public class RecycleBinController {
     public Result<IPage<ShortLinkPageRespDTO>> pageRecycleBinShortLink(ShortLinkRecycleBinPageReqDTO requestParam){
         return recycleBinService.pageRecycleBinShortLink(requestParam);
     }
+
+    /**
+     * 恢复短链接
+     */
+    @PostMapping("/api/short-link/admin/v1/recycle-bin/recover")
+    public Result<Void> recoverRecycleBin(@RequestBody RecycleBinRecoverReqDTO requestParam){
+        shortLinkRemoteService.recoverRecycleBin(requestParam);
+        return Results.success();
+    }
+
 
 }
