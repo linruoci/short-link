@@ -23,3 +23,7 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
       id-type: auto
+short-link:
+  stats:
+    locale:
+      amap-key: f31c3335e00f442cf56caed46ddeea2a
