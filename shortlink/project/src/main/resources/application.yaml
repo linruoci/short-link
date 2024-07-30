@@ -22,7 +22,7 @@ mybatis-plus:
       logic-delete-field: delFlag
       logic-delete-value: 1
       logic-not-delete-value: 0
-      id-type: auto
+      id-type: assign_id
 short-link:
   stats:
     locale:
