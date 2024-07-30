@@ -20,14 +20,8 @@ import com.ruoci.shortlink.project.common.constant.ShortLinkConstant;
 import com.ruoci.shortlink.project.common.convention.exception.ClientException;
 import com.ruoci.shortlink.project.common.convention.exception.ServiceException;
 import com.ruoci.shortlink.project.common.enums.ValidDateTypeEnum;
-import com.ruoci.shortlink.project.dao.entity.LinkAccessStatsDO;
-import com.ruoci.shortlink.project.dao.entity.LinkLocaleStatsDO;
-import com.ruoci.shortlink.project.dao.entity.ShortLinkDO;
-import com.ruoci.shortlink.project.dao.entity.ShortLinkGotoDO;
-import com.ruoci.shortlink.project.dao.mapper.LinkAccessStatsMapper;
-import com.ruoci.shortlink.project.dao.mapper.LinkLocaleStatsMapper;
-import com.ruoci.shortlink.project.dao.mapper.ShortLinkGotoMapper;
-import com.ruoci.shortlink.project.dao.mapper.ShortLinkMapper;
+import com.ruoci.shortlink.project.dao.entity.*;
+import com.ruoci.shortlink.project.dao.mapper.*;
 import com.ruoci.shortlink.project.dto.req.ShortLinkCreateReqDTO;
 import com.ruoci.shortlink.project.dto.req.ShortLinkPageReqDTO;
 import com.ruoci.shortlink.project.dto.req.ShortLinkUpdateReqDTO;
@@ -77,6 +71,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     private final RedissonClient redissonClient;
     private final LinkAccessStatsMapper linkAccessStatsMapper;
     private final LinkLocaleStatsMapper linkLocaleStatsMapper;
+    private final LinkBrowserStatsMapper linkBrowserStatsMapper;
 
     @Value("${short-link.stats.locale.amap-key}")
     private String statsLocaleAmapKey;
@@ -328,6 +323,17 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         .date(Date.from(now.atZone(ZoneId.systemDefault()).toInstant()))
                         .build();
                 linkLocaleStatsMapper.shortLinkLocaleStats(linkLocaleStatsDO);
+
+                LinkBrowserStatsDO linkBrowserStatsDO = LinkBrowserStatsDO.builder()
+                        .browser(LinkUtil.getBrowser(request))
+                        .cnt(1)
+                        .gid(gid)
+                        .fullShortUrl(fullShortUrl)
+                        .date(new Date())
+                        .build();
+                linkBrowserStatsMapper.shortLinkBrowserState(linkBrowserStatsDO);
+
+
             }
 
 

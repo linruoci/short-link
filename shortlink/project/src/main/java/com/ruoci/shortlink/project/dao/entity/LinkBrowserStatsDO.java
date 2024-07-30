@@ -1,5 +1,7 @@
 package com.ruoci.shortlink.project.dao.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.ruoci.shortlink.project.common.database.BaseDO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,13 +10,14 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 /**
- * 短链接监控地区实体
+ * 短链接监控浏览器实体
  **/
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LinkLocaleStats {
+@TableName("t_link_browser_stats")
+public class LinkBrowserStatsDO extends BaseDO {
     /**
      * id
      */
@@ -41,22 +44,7 @@ public class LinkLocaleStats {
     private Integer cnt;
 
     /**
-     * 省份名称
+     * 浏览器名称
      */
-    private String province;
-
-    /**
-     * 市名称
-     */
-    private String city;
-
-    /**
-     * 城市编码
-     */
-    private String adcode;
-
-    /**
-     * 国家标识
-     */
-    private String country;
+    private String browser;
 }
