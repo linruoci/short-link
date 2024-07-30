@@ -72,6 +72,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     private final LinkAccessStatsMapper linkAccessStatsMapper;
     private final LinkLocaleStatsMapper linkLocaleStatsMapper;
     private final LinkBrowserStatsMapper linkBrowserStatsMapper;
+    private final LinkOsStatsMapper linkOsStatsMapper;
 
     @Value("${short-link.stats.locale.amap-key}")
     private String statsLocaleAmapKey;
@@ -257,6 +258,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     private void shortLinkStats(String fullShortUrl, String gid, HttpServletRequest request, HttpServletResponse response){
         AtomicBoolean uvFirstFlag = new AtomicBoolean();
         Cookie[] cookies = request.getCookies();
+
         try{
             Runnable addResponseCookieTask = () -> {
                 String uv = UUID.fastUUID().toString();
@@ -324,12 +326,21 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         .build();
                 linkLocaleStatsMapper.shortLinkLocaleStats(linkLocaleStatsDO);
 
+                LinkOsStatsDO linkOsStatsDO = LinkOsStatsDO.builder()
+                        .gid(gid)
+                        .cnt(1)
+                        .os(LinkUtil.getOs(request))
+                        .fullShortUrl(fullShortUrl)
+                        .date(Date.from(now.atZone(ZoneId.systemDefault()).toInstant()))
+                        .build();
+                linkOsStatsMapper.shortLinkOsState(linkOsStatsDO);
+
                 LinkBrowserStatsDO linkBrowserStatsDO = LinkBrowserStatsDO.builder()
                         .browser(LinkUtil.getBrowser(request))
                         .cnt(1)
                         .gid(gid)
                         .fullShortUrl(fullShortUrl)
-                        .date(new Date())
+                        .date(Date.from(now.atZone(ZoneId.systemDefault()).toInstant()))
                         .build();
                 linkBrowserStatsMapper.shortLinkBrowserState(linkBrowserStatsDO);
 
