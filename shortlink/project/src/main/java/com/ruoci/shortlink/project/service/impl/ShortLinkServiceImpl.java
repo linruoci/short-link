@@ -21,7 +21,7 @@ import com.ruoci.shortlink.project.common.convention.exception.ClientException;
 import com.ruoci.shortlink.project.common.convention.exception.ServiceException;
 import com.ruoci.shortlink.project.common.enums.ValidDateTypeEnum;
 import com.ruoci.shortlink.project.dao.entity.LinkAccessStatsDO;
-import com.ruoci.shortlink.project.dao.entity.LinkLocaleStats;
+import com.ruoci.shortlink.project.dao.entity.LinkLocaleStatsDO;
 import com.ruoci.shortlink.project.dao.entity.ShortLinkDO;
 import com.ruoci.shortlink.project.dao.entity.ShortLinkGotoDO;
 import com.ruoci.shortlink.project.dao.mapper.LinkAccessStatsMapper;
@@ -317,7 +317,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             if (StrUtil.isNotBlank(infocode) && StrUtil.equals(infocode, "10000")){
                 String province = localeResultObj.getStr("province");
                 boolean unknownFlag = StrUtil.equals("[]", province);
-                LinkLocaleStats linkLocaleStats = LinkLocaleStats.builder()
+                LinkLocaleStatsDO linkLocaleStatsDO = LinkLocaleStatsDO.builder()
                         .province(unknownFlag ? "未知" : province)
                         .city(unknownFlag ? "未知" : localeResultObj.getStr("city"))
                         .adcode(unknownFlag ? "未知" : localeResultObj.getStr("adcode"))
@@ -327,7 +327,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         .gid(gid)
                         .date(Date.from(now.atZone(ZoneId.systemDefault()).toInstant()))
                         .build();
-                linkLocaleStatsMapper.shortLinkLocaleStats(linkLocaleStats);
+                linkLocaleStatsMapper.shortLinkLocaleStats(linkLocaleStatsDO);
             }
 
 
