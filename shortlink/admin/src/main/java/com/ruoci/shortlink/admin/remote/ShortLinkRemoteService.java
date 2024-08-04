@@ -8,10 +8,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ruoci.shortlink.admin.common.convention.result.Result;
 import com.ruoci.shortlink.admin.dto.req.recycle.RecycleBinSaveReqDTO;
 import com.ruoci.shortlink.admin.remote.dto.req.*;
-import com.ruoci.shortlink.admin.remote.dto.resp.ShortLinkCreateRespDTO;
-import com.ruoci.shortlink.admin.remote.dto.resp.ShortLinkGroupCountQueryRespDTO;
-import com.ruoci.shortlink.admin.remote.dto.resp.ShortLinkPageRespDTO;
-import com.ruoci.shortlink.admin.remote.dto.resp.ShortLinkStatsRespDTO;
+import com.ruoci.shortlink.admin.remote.dto.resp.*;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.HashMap;
@@ -126,6 +123,16 @@ public interface ShortLinkRemoteService {
      */
     default Result<ShortLinkStatsRespDTO> oneShortLinkStats(ShortLinkStatsReqDTO requestParam) {
         String resultBodyStr = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/stats", BeanUtil.beanToMap(requestParam));
+        return JSON.parseObject(resultBodyStr, new TypeReference<>() {
+        });
+    }
+
+    default Result<IPage<ShortLinkStatesAccessRecordRespDTO>> shortLinkStatsAccessRecord(ShortLinkStatsAccessRecordReqDTO requestParam) {
+        Map<String, Object> stringObjectMap = BeanUtil.beanToMap(requestParam, false, true);
+        stringObjectMap.remove("orders");
+        stringObjectMap.remove("records");
+
+        String resultBodyStr = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/access-record", BeanUtil.beanToMap(stringObjectMap));
         return JSON.parseObject(resultBodyStr, new TypeReference<>() {
         });
     }

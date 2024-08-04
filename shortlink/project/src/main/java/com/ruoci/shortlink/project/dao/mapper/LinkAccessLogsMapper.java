@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Select;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 短链接监控高频访问持久层
@@ -55,4 +56,71 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDO> {
     )
     HashMap<String, Object> findUvTypeCntByShortLink(@Param("param") ShortLinkStatsReqDTO requestParam);
 
+    /**
+     * TODO: 我觉得这里有点问题, 应该改为下面sql
+     * """
+     * SELECT
+     *     log.id,
+     *     log.user,
+     *     log.create_time,
+     *     CASE
+     *         WHEN EXISTS (
+     *             SELECT 1
+     *             FROM t_link_access_logs AS prev_log
+     *             WHERE prev_log.user = log.user
+     *               AND prev_log.create_time < log.create_time
+     *         ) THEN '老访客'
+     *         ELSE '新访客'
+     *     END AS visitor_status
+     * FROM
+     *     t_link_access_logs AS log
+     * WHERE
+     *     log.create_time BETWEEN '2024-08-04 00:00:00' AND '2024-08-04 23:59:59';
+     * """
+     * 获取用户信息是否新老访客
+     */
+    @Select(
+            """
+            <script>
+            SELECT
+                user, CASE WHEN MIN(create_time) BETWEEN CONCAT(#{startDate},' 00:00:00') AND CONCAT(#{endDate},' 23:59:59') THEN '新访客' ELSE '老访客' END AS uvType
+            FROM
+                t_link_access_logs
+            WHERE
+                full_short_url = #{fullShortUrl}
+                AND gid = #{gid}
+                AND user in
+                    <foreach item='item' index='index' collection='userAccessLogsList' open='(' separator=',' close=')'>
+                        #{item}
+                    </foreach>
+            GROUP BY
+                user;
+            </script>
+            """
+//            """
+//                SELECT
+//                    log.user,
+//                    CASE
+//                        WHEN EXISTS (
+//                            SELECT 1
+//                            FROM t_link_access_logs AS prev_log
+//                            WHERE prev_log.user = log.user
+//                              AND prev_log.create_time < log.create_time
+//                              AND prev_log.full_short_url = log.full_short_url
+//                        ) THEN '老访客'
+//                        ELSE '新访客'
+//                    END AS uvType
+//                FROM
+//                    t_link_access_logs AS log
+//                WHERE
+//                    log.full_short_url = #{fullShortUrl} and
+//                    log.create_time BETWEEN CONCAT(#{startDate},' 00:00:00') AND CONCAT(#{endDate},' 23:59:59');
+//            """
+    )
+    List<Map<String, Object>> selectUvTypeByUsers(
+            @Param("gid") String gid,
+            @Param("fullShortUrl") String fullShortUrl,
+            @Param("startDate") String startDate,
+            @Param("endDate") String endDate,
+            @Param("userAccessLogsList") List<String> userAccessLogsList);
 }
