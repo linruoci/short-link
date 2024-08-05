@@ -9,6 +9,14 @@ import lombok.Data;
 @Data
 public class ShortLinkPageReqDTO extends Page {
 
+    /**
+     * 分组标识
+     */
     private String gid;
+
+    /**
+     * 排序标识
+     */
+    private String orderTag;
 
 }

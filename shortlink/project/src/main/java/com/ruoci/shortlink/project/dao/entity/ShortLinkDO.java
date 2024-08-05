@@ -86,4 +86,21 @@ public class ShortLinkDO extends BaseDO {
      */
     private String favicon;
 
+    /**
+     * 历史 uv
+     */
+    private Integer totalUv;
+
+    /**
+     * 历史 pv
+     */
+    private Integer totalPv;
+
+    /**
+     * 历史 UIP
+     */
+    private Integer totalUip;
+
+
+
 }
