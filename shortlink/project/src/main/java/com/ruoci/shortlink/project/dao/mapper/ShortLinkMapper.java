@@ -19,7 +19,7 @@ public interface ShortLinkMapper extends BaseMapper<ShortLinkDO> {
                 t_link
             set 
                 total_pv = total_pv + #{totalPv}, total_uv = total_uv + #{totalUv},
-                total_uip = #{totalUIp} 
+                total_uip = #{totalUip} 
             where 
                 gid = #{gid} and full_short_url = #{fullShortUrl};
             """
@@ -28,6 +28,6 @@ public interface ShortLinkMapper extends BaseMapper<ShortLinkDO> {
                    @Param("fullShortUrl") String fullShortUrl,
                    @Param("totalPv") Integer totalPv,
                    @Param("totalUv") Integer totalUv,
-                   @Param("totalUIp") Integer totalUIp);
+                   @Param("totalUip") Integer totalUIp);
 
 }
