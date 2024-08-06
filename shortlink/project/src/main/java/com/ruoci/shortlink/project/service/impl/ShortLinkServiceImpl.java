@@ -388,6 +388,10 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         .build();
                 linkAccessLogsMapper.insert(linkAccessLogsDO);
 
+                baseMapper.increment(gid,fullShortUrl,1,
+                        uvFirstFlag.get()? 1 : 0,
+                        uipFirstFlag? 1 : 0);
+
             }
 
         } catch (Throwable ex){
