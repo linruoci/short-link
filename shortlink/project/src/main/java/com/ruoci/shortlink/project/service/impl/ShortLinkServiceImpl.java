@@ -77,6 +77,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     private final LinkAccessLogsMapper linkAccessLogsMapper;
     private final LinkDeviceStatsMapper linkDeviceStatsMapper;
     private final LinkNetworkStatsMapper linkNetworkStatsMapper;
+    private final LinkStatsTodayMapper linkStatsTodayMapper;
 
     @Value("${short-link.stats.locale.amap-key}")
     private String statsLocaleAmapKey;
@@ -388,9 +389,22 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         .build();
                 linkAccessLogsMapper.insert(linkAccessLogsDO);
 
-                baseMapper.increment(gid,fullShortUrl,1,
+                baseMapper.increment(
+                        gid,
+                        fullShortUrl,
+                        1,
                         uvFirstFlag.get()? 1 : 0,
                         uipFirstFlag? 1 : 0);
+
+                LinkStatsTodayDO linkStatsTodayDO = LinkStatsTodayDO.builder()
+                        .gid(gid)
+                        .fullShortUrl(fullShortUrl)
+                        .todayPv(1)
+                        .todayUv(uvFirstFlag.get() ? 1 : 0)
+                        .todayUip(uipFirstFlag ? 1 : 0)
+                        .date(Date.from(now.atZone(ZoneId.systemDefault()).toInstant()))
+                        .build();
+                linkStatsTodayMapper.shortLinkTodayState(linkStatsTodayDO);
 
             }
 
