@@ -2,6 +2,7 @@ package com.ruoci.shortlink.project.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoci.shortlink.project.dao.entity.LinkAccessLogsDO;
+import com.ruoci.shortlink.project.dao.entity.LinkAccessStatsDO;
 import com.ruoci.shortlink.project.dto.req.ShortLinkStatsReqDTO;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -123,4 +124,29 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDO> {
             @Param("startDate") String startDate,
             @Param("endDate") String endDate,
             @Param("userAccessLogsList") List<String> userAccessLogsList);
+
+
+    /**
+     * 根据短链接获取指定日期内 PV, UV, UIP数据
+     */
+    @Select(
+            """
+                SELECT
+                    count(user) as pv,
+                    count(distinct user) as uv,
+                    count(distinct ip) as uip
+                FROM
+                    t_link_access_logs
+                WHERE
+                    full_short_url = #{param.fullShortUrl}
+                    AND gid = #{param.gid}
+                    AND create_time BETWEEN CONCAT(#{param.startDate},' 00:00:00') AND CONCAT(#{param.endDate},' 23:59:59')
+                GROUP BY
+                    full_short_url, gid;
+
+            
+            """
+    )
+    LinkAccessStatsDO findPvUvUidStatsByShortLink(@Param("param") ShortLinkStatsReqDTO requestParam);
+
 }
