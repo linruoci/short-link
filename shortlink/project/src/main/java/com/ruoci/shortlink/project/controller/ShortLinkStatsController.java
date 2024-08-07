@@ -4,10 +4,11 @@ package com.ruoci.shortlink.project.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ruoci.shortlink.project.common.convention.result.Result;
 import com.ruoci.shortlink.project.common.convention.result.Results;
+import com.ruoci.shortlink.project.dto.req.ShortLinkGroupStatsAccessRecordReqDTO;
 import com.ruoci.shortlink.project.dto.req.ShortLinkGroupStatsReqDTO;
 import com.ruoci.shortlink.project.dto.req.ShortLinkStatsAccessRecordReqDTO;
 import com.ruoci.shortlink.project.dto.req.ShortLinkStatsReqDTO;
-import com.ruoci.shortlink.project.dto.resp.ShortLinkStatesAccessRecordRespDTO;
+import com.ruoci.shortlink.project.dto.resp.ShortLinkStatsAccessRecordRespDTO;
 import com.ruoci.shortlink.project.dto.resp.ShortLinkStatsRespDTO;
 import com.ruoci.shortlink.project.service.ShortLinkStatsService;
 import lombok.RequiredArgsConstructor;
@@ -43,8 +44,16 @@ public class ShortLinkStatsController {
      * 访问单个短链接指定时间内监控数据
      */
     @GetMapping("/api/short-link/v1/access-record")
-    public Result<IPage<ShortLinkStatesAccessRecordRespDTO>> shortLinkStatsAccessRecord(ShortLinkStatsAccessRecordReqDTO requestParam) {
+    public Result<IPage<ShortLinkStatsAccessRecordRespDTO>> shortLinkStatsAccessRecord(ShortLinkStatsAccessRecordReqDTO requestParam) {
         return Results.success(shortLinkStatsService.shortLinkStatsAccessRecord(requestParam));
+    }
+
+    /**
+     * 访问分组短链接指定时间内访问记录监控数据
+     */
+    @GetMapping("/api/short-link/v1/stats/access-record/group")
+    public Result<IPage<ShortLinkStatsAccessRecordRespDTO>> groupShortLinkStatsAccessRecord(ShortLinkGroupStatsAccessRecordReqDTO requestParam) {
+        return Results.success(shortLinkStatsService.groupShortLinkStatsAccessRecord(requestParam));
     }
 
 }

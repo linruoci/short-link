@@ -1,10 +1,11 @@
 package com.ruoci.shortlink.project.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.ruoci.shortlink.project.dto.req.ShortLinkGroupStatsAccessRecordReqDTO;
 import com.ruoci.shortlink.project.dto.req.ShortLinkGroupStatsReqDTO;
 import com.ruoci.shortlink.project.dto.req.ShortLinkStatsAccessRecordReqDTO;
 import com.ruoci.shortlink.project.dto.req.ShortLinkStatsReqDTO;
-import com.ruoci.shortlink.project.dto.resp.ShortLinkStatesAccessRecordRespDTO;
+import com.ruoci.shortlink.project.dto.resp.ShortLinkStatsAccessRecordRespDTO;
 import com.ruoci.shortlink.project.dto.resp.ShortLinkStatsRespDTO;
 
 /**
@@ -34,5 +35,14 @@ public interface ShortLinkStatsService {
      * @param requestParam 获取短链接监控访问记录数据入参
      * @return 访问记录监控数据
      */
-    IPage<ShortLinkStatesAccessRecordRespDTO> shortLinkStatsAccessRecord(ShortLinkStatsAccessRecordReqDTO requestParam);
+    IPage<ShortLinkStatsAccessRecordRespDTO> shortLinkStatsAccessRecord(ShortLinkStatsAccessRecordReqDTO requestParam);
+
+    /**
+     * 访问分组短链接指定时间内访问记录监控数据
+     *
+     * @param requestParam 获取分组短链接监控访问记录数据入参
+     * @return 分组访问记录监控数据
+     */
+    IPage<ShortLinkStatsAccessRecordRespDTO> groupShortLinkStatsAccessRecord(ShortLinkGroupStatsAccessRecordReqDTO requestParam);
+
 }

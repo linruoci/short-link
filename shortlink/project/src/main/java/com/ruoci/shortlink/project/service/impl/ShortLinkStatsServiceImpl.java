@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.ruoci.shortlink.project.dao.entity.*;
 import com.ruoci.shortlink.project.dao.mapper.*;
+import com.ruoci.shortlink.project.dto.req.ShortLinkGroupStatsAccessRecordReqDTO;
 import com.ruoci.shortlink.project.dto.req.ShortLinkGroupStatsReqDTO;
 import com.ruoci.shortlink.project.dto.req.ShortLinkStatsAccessRecordReqDTO;
 import com.ruoci.shortlink.project.dto.req.ShortLinkStatsReqDTO;
@@ -396,7 +397,7 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
     }
 
     @Override
-    public IPage<ShortLinkStatesAccessRecordRespDTO> shortLinkStatsAccessRecord(ShortLinkStatsAccessRecordReqDTO requestParam) {
+    public IPage<ShortLinkStatsAccessRecordRespDTO> shortLinkStatsAccessRecord(ShortLinkStatsAccessRecordReqDTO requestParam) {
         LambdaQueryWrapper<LinkAccessLogsDO> queryWrapper = Wrappers.lambdaQuery(LinkAccessLogsDO.class)
                 .eq(LinkAccessLogsDO::getGid, requestParam.getGid())
                 .between(LinkAccessLogsDO::getCreateTime, requestParam.getStartDate() + " 00:00:00", requestParam.getEndDate() + " 23:59:59")
@@ -405,11 +406,11 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
                 .orderByDesc(LinkAccessLogsDO::getCreateTime);
 
         IPage<LinkAccessLogsDO> resultPage = linkAccessLogsMapper.selectPage(requestParam, queryWrapper);
-        IPage<ShortLinkStatesAccessRecordRespDTO> actualResult = resultPage.convert(each -> BeanUtil.toBean(each, ShortLinkStatesAccessRecordRespDTO.class));
+        IPage<ShortLinkStatsAccessRecordRespDTO> actualResult = resultPage.convert(each -> BeanUtil.toBean(each, ShortLinkStatsAccessRecordRespDTO.class));
         List<String> userAccessLogsList = actualResult
                 .getRecords()
                 .stream()
-                .map(ShortLinkStatesAccessRecordRespDTO::getUser).toList();
+                .map(ShortLinkStatsAccessRecordRespDTO::getUser).toList();
         if (CollUtil.isEmpty(userAccessLogsList)){
             return actualResult;
         }
@@ -428,6 +429,39 @@ public class ShortLinkStatsServiceImpl implements ShortLinkStatsService {
             each.setUvType(userUvTypeMap.getOrDefault(each.getUser(), "老访客"));
         });
 
+        return actualResult;
+    }
+
+    @Override
+    public IPage<ShortLinkStatsAccessRecordRespDTO> groupShortLinkStatsAccessRecord(ShortLinkGroupStatsAccessRecordReqDTO requestParam) {
+        LambdaQueryWrapper<LinkAccessLogsDO> queryWrapper = Wrappers.lambdaQuery(LinkAccessLogsDO.class)
+                .eq(LinkAccessLogsDO::getGid, requestParam.getGid())
+                .between(LinkAccessLogsDO::getCreateTime, requestParam.getStartDate() + " 00:00:00", requestParam.getEndDate() + " 23:59:59")
+                .eq(LinkAccessLogsDO::getDelFlag, 0)
+                .orderByDesc(LinkAccessLogsDO::getCreateTime);
+        IPage<LinkAccessLogsDO> linkAccessLogsDOIPage = linkAccessLogsMapper.selectPage(requestParam, queryWrapper);
+        IPage<ShortLinkStatsAccessRecordRespDTO> actualResult = linkAccessLogsDOIPage.convert(each -> BeanUtil.toBean(each, ShortLinkStatsAccessRecordRespDTO.class));
+        List<String> userAccessLogsList = actualResult.getRecords().stream()
+                .map(ShortLinkStatsAccessRecordRespDTO::getUser)
+                .toList();
+        if (CollUtil.isEmpty(userAccessLogsList)){
+            return actualResult;
+        }
+        List<Map<String, Object>> uvTypeList = linkAccessLogsMapper.selectGroupUvTypeByUsers(
+                requestParam.getGid(),
+                requestParam.getStartDate(),
+                requestParam.getEndDate(),
+                userAccessLogsList
+        );
+        actualResult.getRecords().forEach(each -> {
+            String uvType = uvTypeList.stream()
+                    .filter(item -> Objects.equals(each.getUser(), item.get("user")))
+                    .findFirst()
+                    .map(item -> item.get("UvType"))
+                    .map(Object::toString)
+                    .orElse("旧访客");
+            each.setUvType(uvType);
+        });
         return actualResult;
     }
 }
