@@ -1,7 +1,9 @@
 package com.ruoci.shortlink.project.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ruoci.shortlink.project.dao.entity.ShortLinkDO;
+import com.ruoci.shortlink.project.dto.req.ShortLinkPageReqDTO;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
 
@@ -29,5 +31,11 @@ public interface ShortLinkMapper extends BaseMapper<ShortLinkDO> {
                    @Param("totalPv") Integer totalPv,
                    @Param("totalUv") Integer totalUv,
                    @Param("totalUip") Integer totalUIp);
+
+    /**
+     * 分页统计短链接
+     */
+    IPage<ShortLinkDO> pageLink(ShortLinkPageReqDTO requestParam);
+
 
 }
