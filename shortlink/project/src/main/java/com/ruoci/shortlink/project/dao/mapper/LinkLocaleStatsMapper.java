@@ -2,6 +2,7 @@ package com.ruoci.shortlink.project.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoci.shortlink.project.dao.entity.LinkLocaleStatsDO;
+import com.ruoci.shortlink.project.dto.req.ShortLinkGroupStatsReqDTO;
 import com.ruoci.shortlink.project.dto.req.ShortLinkStatsReqDTO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
@@ -44,5 +45,23 @@ public interface LinkLocaleStatsMapper extends BaseMapper<LinkLocaleStatsDO> {
     )
     List<LinkLocaleStatsDO> listLocaleByShortLink(@Param("param") ShortLinkStatsReqDTO requestParam);
 
+    /**
+     * 根据分组获取指定日期内地区监控数据
+     */
+    @Select(
+            """
+            SELECT
+                province,
+                SUM(cnt) AS cnt
+            FROM
+                t_link_locale_stats
+            WHERE
+                gid = #{param.gid}
+                AND date BETWEEN #{param.startDate} and #{param.endDate}
+            GROUP BY
+                gid, province;
+            """
+            )
+    List<LinkLocaleStatsDO> listLocaleByGroup(@Param("param") ShortLinkGroupStatsReqDTO requestParam);
 
 }
