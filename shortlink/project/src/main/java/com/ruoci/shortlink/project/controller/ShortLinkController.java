@@ -7,6 +7,7 @@ import com.ruoci.shortlink.project.dto.req.ShortLinkBatchCreateReqDTO;
 import com.ruoci.shortlink.project.dto.req.ShortLinkCreateReqDTO;
 import com.ruoci.shortlink.project.dto.req.ShortLinkPageReqDTO;
 import com.ruoci.shortlink.project.dto.req.ShortLinkUpdateReqDTO;
+import com.ruoci.shortlink.project.dto.resp.ShortLinkBatchCreateRespDTO;
 import com.ruoci.shortlink.project.dto.resp.ShortLinkCreateRespDTO;
 import com.ruoci.shortlink.project.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.ruoci.shortlink.project.dto.resp.ShortLinkPageRespDTO;
