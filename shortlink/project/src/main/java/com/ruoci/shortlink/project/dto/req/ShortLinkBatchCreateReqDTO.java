@@ -1,36 +1,26 @@
 package com.ruoci.shortlink.project.dto.req;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 /**
- * 新建短链接请求实体
+ * 短链接批量创建请求对象
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class ShortLinkUpdateReqDTO {
+public class ShortLinkBatchCreateReqDTO {
 
     /**
-     * 原始链接
+     * 原始链接集合
      */
-    private String originUrl;
+    private List<String> originUrls;
 
     /**
-     * 完整短链接
+     * 描述集合
      */
-    private String fullShortUrl;
-
-    /**
-     * 原始分组标识
-     */
-    private String originGid;
+    private List<String> describes;
 
     /**
      * 分组标识
@@ -52,9 +42,4 @@ public class ShortLinkUpdateReqDTO {
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date validDate;
-
-    /**
-     * 描述
-     */
-    private String describe;
 }
