@@ -127,7 +127,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
                 .eq(GroupDO::getId, gid)
                 .eq(GroupDO::getUsername, Optional.ofNullable(username).orElse(UserContext.getUsername()));
         GroupDO hasGroupDO = baseMapper.selectOne(queryWrapper);
-        return hasGroupDO != null;
+        return hasGroupDO == null;
     }
 
 
