@@ -12,7 +12,7 @@ import com.ruoci.shortlink.admin.dao.entity.GroupDO;
 import com.ruoci.shortlink.admin.dao.mapper.GroupMapper;
 import com.ruoci.shortlink.admin.dto.req.group.ShortLinkGroupUpdateReqDTO;
 import com.ruoci.shortlink.admin.dto.resp.group.ShortLinkGroupRespDTO;
-import com.ruoci.shortlink.admin.remote.ShortLinkRemoteService;
+import com.ruoci.shortlink.admin.remote.ShortLinkActualRemoteService;
 import com.ruoci.shortlink.admin.remote.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.ruoci.shortlink.admin.service.GroupService;
 import com.ruoci.shortlink.admin.toolkit.RandomStringGenerator;
@@ -36,7 +36,8 @@ import static com.ruoci.shortlink.admin.common.constant.RedisCacheConstant.LOCK_
 @RequiredArgsConstructor
 public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implements GroupService {
 
-    private ShortLinkRemoteService shortLinkRemoteService = new ShortLinkRemoteService() {};
+
+    private final ShortLinkActualRemoteService shortLinkActualRemoteService;
 
     private final RedissonClient redissonClient;
 
@@ -84,7 +85,11 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
         List<GroupDO> groupDOList = baseMapper.selectList(lambdaQueryWrapper);
         List<ShortLinkGroupRespDTO> results = BeanUtil.copyToList(groupDOList, ShortLinkGroupRespDTO.class);
 
-        List<ShortLinkGroupCountQueryRespDTO> groupCountQueryRespDTOList = shortLinkRemoteService.listGroupShortLinkCount(groupDOList.stream().map(GroupDO::getGid).collect(Collectors.toList())).getData();
+        List<ShortLinkGroupCountQueryRespDTO> groupCountQueryRespDTOList = shortLinkActualRemoteService
+                .listGroupShortLinkCount(groupDOList.stream()
+                        .map(GroupDO::getGid)
+                        .collect(Collectors.toList()))
+                .getData();
         Map<String, Integer> counts = groupCountQueryRespDTOList.stream().collect(Collectors.toMap(ShortLinkGroupCountQueryRespDTO::getGid, ShortLinkGroupCountQueryRespDTO::getShortLinkCount));
         return results.stream().peek(result -> result.setShortLinkCount(counts.getOrDefault(result.getGid(), 0))).collect(Collectors.toList());
 
