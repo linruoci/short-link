@@ -3,11 +3,13 @@ package com.ruoci.shortlink.admin.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.UUID;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoci.shortlink.admin.common.biz.user.UserContext;
 import com.ruoci.shortlink.admin.common.constant.RedisCacheConstant;
 import com.ruoci.shortlink.admin.common.convention.exception.ClientException;
 import com.ruoci.shortlink.admin.common.enums.UserErrorCodeEnum;
@@ -100,7 +102,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
     @Override
     public void update(UserUpdateReqDTO requestParam) {
-//        TODO 验证当前用户是否为登录用户, 如果不是不允许修改!
+        if (!StrUtil.equals(requestParam.getUsername(), UserContext.getUsername())){
+            throw new ClientException("用户信息错误!");
+        }
+
         LambdaUpdateWrapper<UserDO> wrapper = Wrappers.lambdaUpdate(UserDO.class)
                 .eq(UserDO::getUsername, requestParam.getUsername());
         baseMapper.update(BeanUtil.toBean(requestParam, UserDO.class), wrapper);
