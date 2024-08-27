@@ -13,6 +13,7 @@ import static com.ruoci.shortlink.project.common.constant.RedisKeyConstant.SHORT
  */
 @Component
 @RequiredArgsConstructor
+@Deprecated
 public class ShortLinkStatsSaveProducer {
 
     private final StringRedisTemplate stringRedisTemplate;
