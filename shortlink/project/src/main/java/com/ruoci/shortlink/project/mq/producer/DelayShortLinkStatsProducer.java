@@ -17,6 +17,7 @@ import static com.ruoci.shortlink.project.common.constant.RedisKeyConstant.DELAY
  */
 @Component
 @RequiredArgsConstructor
+@Deprecated
 public class DelayShortLinkStatsProducer {
 
     private final RedissonClient redissonClient;
